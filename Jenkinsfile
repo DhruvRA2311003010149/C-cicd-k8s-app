@@ -2,22 +2,22 @@ pipeline {
     agent any
 
     environment {
-        KUBECONFIG = "C:\\Users\\Dhruv\\.kube\\config"
+        IMAGE_NAME = "cicd-app"
+        IMAGE_TAG = "${BUILD_NUMBER}"
     }
 
     stages {
-        stage('Build Docker Image') {
+        stage('Build Image') {
             steps {
-                bat 'docker build --no-cache -t cicd-app:latest .'
+                bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
             }
         }
 
         stage('Deploy to Kubernetes') {
             steps {
-                bat 'kubectl config use-context docker-desktop'
-                bat 'kubectl apply -f deployment.yaml --validate=false'
-                bat 'kubectl apply -f service.yaml --validate=false'
-                bat 'kubectl delete pod -l app=cicd-app'
+                bat "kubectl config use-context docker-desktop"
+                bat "kubectl set image deployment/cicd-app cicd-app=%IMAGE_NAME%:%IMAGE_TAG% --record"
+                bat "kubectl rollout status deployment/cicd-app"
             }
         }
     }
