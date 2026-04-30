@@ -15,6 +15,7 @@ spec:
       containers:
       - name: myapp
         image: localhost:5000/myapp:latest
+        imagePullPolicy: Always        # ← ADD THIS LINE
         ports:
         - containerPort: 80
 ---
