@@ -7,15 +7,17 @@ spec:
   selector:
     matchLabels:
       app: myapp
+      type: cicd        # ← ADD THIS
   template:
     metadata:
       labels:
         app: myapp
+        type: cicd        # ← ADD THIS
     spec:
       containers:
       - name: myapp
         image: localhost:5000/myapp:latest
-        imagePullPolicy: Always        # ← ADD THIS LINE
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
 ---
@@ -27,6 +29,7 @@ spec:
   type: NodePort
   selector:
     app: myapp
+    type: cicd          # ← ADD THIS
   ports:
   - protocol: TCP
     port: 80
